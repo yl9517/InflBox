@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           BigInt    @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  phone        String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  userPlatforms UserPlatform[]
+  userCampaigns UserCampaign[]
+  reviews      Review[]
+}
+
+model UserPlatform {
+  id           BigInt    @id @default(autoincrement())
+  userId       BigInt
+  platformName String
+  followers    Int        @default(0)
+  averageViews Int        @default(0)
+  profileUrl   String?
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ExperienceSite {
+  id          BigInt    @id @default(autoincrement())
+  siteName    String
+  siteUrl     String?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  campaigns   ExperienceCampaign[]
+}
+
+model ExperienceCampaign {
+  id          BigInt    @id @default(autoincrement())
+  siteId      BigInt
+  campaignName String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  address     String?
+  latitude    Decimal(10, 7)?
+  longitude   Decimal(10, 7)?
+  categoryId  BigInt?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  site        ExperienceSite   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  category    Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userCampaigns UserCampaign[]
+  reviews     Review[]
+}
+
+model UserCampaign {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt
+  campaignId BigInt
+  status     CampaignStatus @default(신청)
+  appliedAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaign   ExperienceCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model PlatformType {
+  id         BigInt   @id @default(autoincrement())
+  name       String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Category {
+  id         BigInt   @id @default(autoincrement())
+  name       String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  campaigns  ExperienceCampaign[]
+}
+
+model Review {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt
+  campaignId BigInt
+  reviewText String?
+  rating     Int      @default(1) @check(rating >= 1 && rating <= 5)
+  createdAt  DateTime @default(now())
+
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaign   ExperienceCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
