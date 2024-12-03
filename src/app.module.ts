@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config'; // ConfigModule 임포트
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CampainModule } from './campaign/campaign.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AppService } from './app.service';
         synchronize: true, // DB 자동 동기화 (개발 환경에서만 사용)
       }),
     }),
+    CampainModule,
   ],
   controllers: [AppController],
   providers: [AppService],
