@@ -1,6 +1,9 @@
 // src/search/services/weble.service.ts
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { SearchCampaignDto } from '../dto/search-campaign.dto';
+import { CampaignSite } from '../enum/campaign-site.enum';
+import { Category } from '../enum/category.enum';
 
 @Injectable()
 export class WebleService {
@@ -14,14 +17,45 @@ export class WebleService {
 
     try {
       const response = await axios.get(url);
+      const result = response.data.items;
 
-      const items = response.data.items;
-      const titles = items.map((item) => item.item);
+      const campaignArr = result.map((item) =>
+        this.transformToSearchCampaign(item),
+      );
 
-      return titles;
+      return campaignArr;
     } catch (error) {
       console.error('API 요청 중 오류 발생:', error);
       throw new Error('Weble API 요청 중 오류 발생');
     }
   }
+
+  transformToSearchCampaign = (item: any): SearchCampaignDto => {
+    const dto: SearchCampaignDto = new SearchCampaignDto();
+
+    dto.campaign = CampaignSite.WEBLE;
+    dto.title = item.item;
+    dto.content = item.title;
+    dto.offer = '';
+    dto.address = {
+      city: '',
+      sido: '',
+      name: item.venue.name,
+      jibunAddress: item.venue.addressFirst,
+      detailAddress: item.venue.addressLast,
+      lat: item.venue.lat,
+      lng: item.venue.lng,
+    };
+    dto.category = Category.BEAUTY;
+    dto.applicationStartAt = new Date(item.requestStartedOn); // 신청 시작일
+    dto.applicationEndAt = new Date(item.requestEndedOn); // 신청 종료일
+    dto.winnerAnnouncementAt = new Date(item.entryAnnouncedOn); // 당첨 발표일
+    dto.contentStartAt = new Date(item.postingStartedOn); // 콘텐츠 등록 시작일
+    dto.contentEndAt = new Date(item.postingEndedOn); // 콘텐츠 체험 종료일
+    dto.capacity = item.reviewerLimit; // 모집 인원
+    dto.applicantCount = item.byDeadline; // 신청 인원
+    dto.thumbnail = item.thumbnail;
+
+    return dto;
+  };
 }
