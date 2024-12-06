@@ -19,7 +19,7 @@ describe('GangnamRestaurantService', () => {
   });
 
   it('should fetch Gangnam restaurant data', async () => {
-    const result = await service.getGangnamRestaurants('고양');
+    const result = await service.getGangnamRestaurants('화정');
     console.log('강남맛집 결과', result); // 출력 확인용
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBeGreaterThan(0);

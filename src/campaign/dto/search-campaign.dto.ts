@@ -44,6 +44,13 @@ class Address {
 }
 export class SearchCampaignDto {
   @IsNotEmpty()
+  @IsString()
+  linkUrl: string;
+
+  @IsString()
+  siteLogo: string;
+
+  @IsNotEmpty()
   @IsEnum(CampaignSite)
   campaign: CampaignSite;
 

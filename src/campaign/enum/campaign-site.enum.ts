@@ -1,5 +1,5 @@
 export enum CampaignSite {
-  WEBLE = 'weble',
-  REVIEW_NOTE = 'review_note',
-  GANGNAM_RESTAURANT = 'gangam_restaurant',
+  REVU = '레뷰',
+  REVIEW_NOTE = '리뷰노트',
+  GANGNAM_RESTAURANT = '강남맛집',
 }

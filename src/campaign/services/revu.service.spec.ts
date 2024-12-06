@@ -1,28 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WebleService } from './weble.service';
+import { RevuService } from './revu.service';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-describe('WebleService', () => {
-  let service: WebleService;
+describe('RevuService', () => {
+  let service: RevuService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [WebleService],
+      providers: [RevuService],
     }).compile();
 
-    service = module.get<WebleService>(WebleService);
+    service = module.get<RevuService>(RevuService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should fetch Weble data from the actual API', async () => {
+  it('should fetch Revu data from the actual API', async () => {
     const keyword = '일산';
 
     // 실제 API 호출
-    const result = await service.getWebleData(keyword);
+    const result = await service.getRevuData(keyword);
     console.log('레뷰 API 결과:', result);
 
     expect(Array.isArray(result)).toBe(true);

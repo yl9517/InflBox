@@ -12,7 +12,7 @@ export class ReviewNoteService {
   async getReviewNoteData(searchQuery: string): Promise<string[]> {
     const url = `${this.baseUrl}?q=${encodeURIComponent(
       searchQuery,
-    )}&limit=1000000&page=0&activeOnly=true`;
+    )}&limit=1000000&page=0&activeOnly=true&status=SELECT`;
 
     try {
       const response = await axios.get(url);
@@ -35,8 +35,10 @@ export class ReviewNoteService {
     const dto: SearchCampaignDto = new SearchCampaignDto();
     let storageUrl: string = process.env.CAMPAIGN_REVIEW_NOTE_STORAGE;
 
+    dto.linkUrl = `${process.env.CAMPAIGN_REVIEW_NOTE_URL}/${item.id}`;
+    dto.siteLogo = 'https://www.reviewnote.co.kr/logo/header.webp';
     dto.campaign = CampaignSite.REVIEW_NOTE;
-    dto.title = item.title;
+    dto.title = `[${item.city} ${item.sido.name}] ${item.title}`;
     dto.content = item.title;
     dto.offer = item.offer;
     dto.address = {
@@ -47,8 +49,7 @@ export class ReviewNoteService {
     dto.winnerAnnouncementAt = new Date(item.applyEndAt); // 당첨 발표일
     dto.capacity = item.infNum; // 모집 인원
     dto.applicantCount = item.applicantCount; // 신청 인원
-    dto.thumbnail = `${storageUrl}/${item.imageKey}`;
-
+    dto.thumbnail = `${storageUrl}${encodeURIComponent(item.imageKey)}?alt=media`;
     return dto;
   };
 }

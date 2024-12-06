@@ -1,4 +1,3 @@
-// src/search/services/weble.service.ts
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { SearchCampaignDto } from '../dto/search-campaign.dto';
@@ -6,11 +5,11 @@ import { CampaignSite } from '../enum/campaign-site.enum';
 import { Category } from '../enum/category.enum';
 
 @Injectable()
-export class WebleService {
-  private readonly baseUrl: string = process.env.CAMPAIGN_WEBLE;
+export class RevuService {
+  private readonly baseUrl: string = process.env.CAMPAIGN_REVU;
 
   //API
-  async getWebleData(keyword: string): Promise<string[]> {
+  async getRevuData(keyword: string): Promise<string[]> {
     const url = `${this.baseUrl}?keyword=${encodeURIComponent(
       keyword,
     )}&limit=14&page=1&type=play`;
@@ -26,14 +25,15 @@ export class WebleService {
       return campaignArr;
     } catch (error) {
       console.error('API 요청 중 오류 발생:', error);
-      throw new Error('Weble API 요청 중 오류 발생');
+      throw new Error('Revu API 요청 중 오류 발생');
     }
   }
 
   transformToSearchCampaign = (item: any): SearchCampaignDto => {
     const dto: SearchCampaignDto = new SearchCampaignDto();
-
-    dto.campaign = CampaignSite.WEBLE;
+    dto.linkUrl = `${process.env.CAMPAIGN_REVU_URL}/${item.id}`;
+    dto.siteLogo = 'https://www.revu.net/assets/img/logo/logo-revu-n.svg';
+    dto.campaign = CampaignSite.REVU;
     dto.title = item.item;
     dto.content = item.title;
     dto.offer = '';

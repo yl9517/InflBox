@@ -2,10 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
+import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // DTO에 정의되지 않은 속성 제거
@@ -14,6 +16,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  await app.listen(process.env.PORT ?? 4000);
 }
 bootstrap();
