@@ -54,6 +54,9 @@ export class SearchCampaignDto {
   @IsEnum(CampaignSite)
   campaign: CampaignSite;
 
+  @IsString()
+  platform?: string;
+
   @IsNotEmpty()
   @IsString()
   title: string;

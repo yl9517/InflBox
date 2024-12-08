@@ -17,15 +17,15 @@ export class GangnamRestaurantService {
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     // 무한 스크롤 처리
-    let previousHeight;
-    let currentHeight = await page.evaluate(() => document.body.scrollHeight);
+    // let previousHeight;
+    // let currentHeight = await page.evaluate(() => document.body.scrollHeight);
 
-    while (previousHeight !== currentHeight) {
-      previousHeight = currentHeight;
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await new Promise((resolve) => setTimeout(resolve, 100)); // 스크롤 후 잠시 대기
-      currentHeight = await page.evaluate(() => document.body.scrollHeight);
-    }
+    // while (previousHeight !== currentHeight) {
+    //   previousHeight = currentHeight;
+    //   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    //   await new Promise((resolve) => setTimeout(resolve, 100)); // 스크롤 후 잠시 대기
+    //   currentHeight = await page.evaluate(() => document.body.scrollHeight);
+    // }
 
     // 데이터 추출
     const restaurantDtos: SearchCampaignDto[] = await page.evaluate(
