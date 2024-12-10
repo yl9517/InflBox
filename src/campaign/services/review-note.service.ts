@@ -51,7 +51,11 @@ export class ReviewNoteService {
       sido: item.sido.name,
     };
     dto.category = item.category.title;
-    dto.applicationEndAt = new Date(item.applyEndAt); // 당첨 발표일
+    dto.applicationEndAt = new Date(
+      new Date(item.applyEndAt).setHours(
+        new Date(item.applyEndAt).getHours() + 9,
+      ),
+    );
     dto.capacity = item.infNum; // 모집 인원
     dto.applicantCount = item.applicantCount; // 신청 인원
     dto.thumbnail = `${storageUrl}${encodeURIComponent(item.imageKey)}?alt=media`;

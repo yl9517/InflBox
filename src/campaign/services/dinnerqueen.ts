@@ -12,14 +12,27 @@ export class DinnerQueenService {
     const url = `${this.baseUrl}/taste?order=dday&query=${search}`;
     const browser = await puppeteer.launch({
       headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
     });
     const page = await browser.newPage();
+
     await page.setUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     );
-
     await page.setViewport({ width: 1440, height: 900 });
-    await page.goto(url, { waitUntil: 'networkidle2' });
+
+    // 네트워크 리소스 차단 (이미지, 스타일시트, 폰트 등)
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+
+    // 페이지 로드
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
 
     // 무한 스크롤 처리
     // let previousHeight;
@@ -33,7 +46,7 @@ export class DinnerQueenService {
     // }
 
     // 데이터 추출
-    const restaurantDtos: SearchCampaignDto[] = await page.evaluate(
+    const dinnerqueenDtos: SearchCampaignDto[] = await page.evaluate(
       (baseUrl) => {
         const dtoArray: any[] = [];
         const elements = document.querySelectorAll('#taste_list > div');
@@ -103,6 +116,6 @@ export class DinnerQueenService {
     );
 
     await browser.close();
-    return restaurantDtos;
+    return dinnerqueenDtos;
   }
 }

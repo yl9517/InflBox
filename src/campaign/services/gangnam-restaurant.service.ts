@@ -10,11 +10,25 @@ export class GangnamRestaurantService {
   // 크롤링
   async getGangnamRestaurants(search: string): Promise<SearchCampaignDto[]> {
     const url = `${this.baseUrl}/cp/?stx=${search}`;
-    const browser = await puppeteer.launch({ headless: true });
+    // Puppeteer 인스턴스 최적화
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+    });
     const page = await browser.newPage();
 
-    await page.setViewport({ width: 1440, height: 900 });
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    // 네트워크 리소스 차단 (이미지, 스타일시트 등)
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+
+    // DOM만 로드되면 작업 실행
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
 
     // 무한 스크롤 처리
     // let previousHeight;
@@ -34,7 +48,7 @@ export class GangnamRestaurantService {
         const elements = document.querySelectorAll('#gall_ul > li');
         const noCampaignMessage = document.querySelector('.list-no-item');
         if (noCampaignMessage) {
-          return []; 
+          return [];
         }
 
         elements.forEach((el: any) => {
