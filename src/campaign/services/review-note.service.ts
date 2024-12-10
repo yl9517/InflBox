@@ -1,8 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import axios from 'axios';
-import { Category } from '../enum/category.enum';
 import { SearchCampaignDto } from '../dto/search-campaign.dto';
 import { CampaignSite } from '../enum/campaign-site.enum';
+import { Platform } from '../enum/platform.enum';
 
 @Injectable()
 export class ReviewNoteService {
@@ -37,7 +37,12 @@ export class ReviewNoteService {
 
     dto.linkUrl = `${process.env.CAMPAIGN_REVIEW_NOTE_URL}/${item.id}`;
     dto.siteLogo = 'https://www.reviewnote.co.kr/logo/header.webp';
+    dto.platform = Platform[item.channel];
     dto.campaign = CampaignSite.REVIEW_NOTE;
+    dto.type = '방문형';
+    if (item.city == '재택') {
+      dto.type = '기자단';
+    }
     dto.title = `[${item.city} ${item.sido.name}] ${item.title}`;
     dto.content = item.title;
     dto.offer = item.offer;
@@ -45,8 +50,8 @@ export class ReviewNoteService {
       city: item.city,
       sido: item.sido.name,
     };
-    dto.category = Category.BEAUTY;
-    dto.winnerAnnouncementAt = new Date(item.applyEndAt); // 당첨 발표일
+    dto.category = item.category.title;
+    dto.applicationEndAt = new Date(item.applyEndAt); // 당첨 발표일
     dto.capacity = item.infNum; // 모집 인원
     dto.applicantCount = item.applicantCount; // 신청 인원
     dto.thumbnail = `${storageUrl}${encodeURIComponent(item.imageKey)}?alt=media`;

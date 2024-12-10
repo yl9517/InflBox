@@ -41,7 +41,7 @@ export class DinnerQueenService {
           const titleText =
             el.querySelector('div > a').getAttribute('title').trim() || '';
 
-          let platform = 'Blog';
+          let platform = '블로그';
           if (titleText.includes('릴스')) {
             platform = '릴스';
           }
@@ -49,7 +49,10 @@ export class DinnerQueenService {
           const campaignId =
             el.querySelector('div > a').getAttribute('href') || '';
           const linkUrl = `${baseUrl}${campaignId}`;
-
+          const category =
+            el.querySelector(
+              'div > div.qz-dq-card__text.mr-t015.mb-mr-t1.mb-pd-t005 > div > div.dis-inline-block.layer-tertiary-o.r-4.pd-r05.mr-r05.pd-v0005 > p > strong',
+            )?.textContent || '';
           const thumbnail = el
             .querySelector('div > a > div > img')
             .getAttribute('src');
@@ -86,7 +89,7 @@ export class DinnerQueenService {
             platform,
             title,
             offer: '',
-            category: '',
+            category,
             applicationEndAt: applicationEndAt.toISOString(),
             winnerAnnouncementAt: winnerAnnouncementAt.toISOString(),
             capacity,

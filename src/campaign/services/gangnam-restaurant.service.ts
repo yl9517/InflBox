@@ -32,6 +32,11 @@ export class GangnamRestaurantService {
       (baseUrl) => {
         const dtoArray: any[] = [];
         const elements = document.querySelectorAll('#gall_ul > li');
+        const noCampaignMessage = document.querySelector('.list-no-item');
+        if (noCampaignMessage) {
+          return []; 
+        }
+
         elements.forEach((el: any) => {
           const gangnamId = el.getAttribute('data-product');
           const linkUrl = `${baseUrl}/cp/?id=${gangnamId}`;
@@ -40,27 +45,47 @@ export class GangnamRestaurantService {
             '';
           const offer =
             el.querySelector('div > div.textArea > dl > dd')?.textContent || '';
-          const category = 'BEAUTY'; // 카테고리 값
+          const platformtText =
+            el.querySelector('div > div.textArea > dl > span > em')
+              ?.textContent || '';
+          const platform = platformtText == 'Blog' ? '블로그' : '';
+          const type =
+            el.querySelector('div > div.textArea > dl > span > em.type')
+              ?.textContent || '';
           const leftDayString =
             el.querySelector('div > div.textArea > dl > span > span > em')
               ?.textContent || '';
-          const daysLeft = parseInt(leftDayString.replace(/\D/g, ''), 10); // 숫자만 추출 (예: 5)
+          let daysLeft = 0;
+          if (leftDayString.includes('일 남음')) {
+            // "3일 남음"과 같은 경우
+            daysLeft = parseInt(leftDayString.replace(/\D/g, ''), 10);
+          } else if (leftDayString.includes('하루전')) {
+            // "하루 전"을 숫자 1로 변환
+            daysLeft = 1;
+          }
           const endDay = new Date();
           if (!isNaN(daysLeft)) {
             endDay.setDate(endDay.getDate() + daysLeft);
           }
+          //KT 변환
+          endDay.setHours(endDay.getHours() + 9);
 
           const winnerAnnouncementAt = endDay.toISOString();
-          const applyNumberText =
-            document.querySelector('span.numb b')?.textContent || '';
-          const capacity = Number(applyNumberText.replace(/\D/g, '')); // 숫자만 추출
 
           // 모집 5에서 숫자 추출
           const applicantText =
-            document.querySelector('span.numb')?.textContent || '';
-          const applicantCount = Number(
-            applicantText.split('모집')[1]?.replace(/\D/g, ''),
-          );
+            el.querySelector('div > div.textArea > div > p > span > b')
+              ?.textContent || '';
+          const applicantCount = Number(applicantText.replace(/\D/g, '')); // 숫자만 추출
+
+          const capacityText =
+            el.querySelector('div > div.textArea > div > p > span')
+              ?.textContent || '';
+          // ::after의 content 가져오기=
+          const capacity = Number(
+            capacityText.split('/ 모집 ')[1]?.replace(/\D/g, ''),
+          ); // 숫자만 추출
+
           const thumbnail =
             el.querySelector('div > div.imgArea > a > img')?.src || null;
 
@@ -70,13 +95,16 @@ export class GangnamRestaurantService {
             campaign: '강남맛집',
             title,
             offer,
-            category,
+            platform,
+            type,
+            applicationEndAt: winnerAnnouncementAt,
             winnerAnnouncementAt,
             capacity,
             applicantCount,
             thumbnail,
           });
         });
+
         return dtoArray;
       },
       this.baseUrl, // baseUrl을 전달

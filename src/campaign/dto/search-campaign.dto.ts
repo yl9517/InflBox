@@ -10,8 +10,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CampaignSite } from '../enum/campaign-site.enum';
-import { Category } from '../enum/category.enum';
 import { Type } from 'class-transformer';
+import { Platform } from '../enum/platform.enum';
 
 class Address {
   @IsString()
@@ -55,7 +55,11 @@ export class SearchCampaignDto {
   campaign: CampaignSite;
 
   @IsString()
+  @IsEnum(Platform)
   platform?: string;
+
+  @IsString()
+  type?: string;
 
   @IsNotEmpty()
   @IsString()
@@ -75,8 +79,8 @@ export class SearchCampaignDto {
   address?: Address;
 
   @IsOptional()
-  @IsEnum(Category)
-  category: Category; // 카테고리
+  //@IsEnum(Category)
+  category: string; // 카테고리
 
   @IsOptional()
   @IsDate()
