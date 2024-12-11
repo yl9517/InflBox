@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import { SearchCampaignDto } from '../dto/search-campaign.dto';
 import * as dotenv from 'dotenv';
+import { CampaignSite } from '../enum/campaign-site.enum';
 
 @Injectable()
 export class GangnamRestaurantService {
@@ -44,7 +45,7 @@ export class GangnamRestaurantService {
     // 데이터 추출
     const restaurantDtos: SearchCampaignDto[] = await page.evaluate(
       (baseUrl) => {
-        const dtoArray: any[] = [];
+        const dtoArray: SearchCampaignDto[] = [];
         const elements = document.querySelectorAll('#gall_ul > li');
         const noCampaignMessage = document.querySelector('.list-no-item');
         if (noCampaignMessage) {
@@ -84,8 +85,6 @@ export class GangnamRestaurantService {
           //KT 변환
           endDay.setHours(endDay.getHours() + 9);
 
-          const winnerAnnouncementAt = endDay.toISOString();
-
           // 모집 5에서 숫자 추출
           const applicantText =
             el.querySelector('div > div.textArea > div > p > span > b')
@@ -101,18 +100,17 @@ export class GangnamRestaurantService {
           ); // 숫자만 추출
 
           const thumbnail =
-            el.querySelector('div > div.imgArea > a > img')?.src || null;
+            el.querySelector('div > div.imgArea > a > img')?.src || 'null';
 
           dtoArray.push({
             linkUrl,
             siteLogo: 'https://xn--939au0g4vj8sq.net/favicon.ico',
             campaign: '강남맛집',
-            title,
-            offer,
             platform,
             type,
-            applicationEndAt: winnerAnnouncementAt,
-            winnerAnnouncementAt,
+            title,
+            offer,
+            applicationEndAt: endDay.toISOString(),
             capacity,
             applicantCount,
             thumbnail,

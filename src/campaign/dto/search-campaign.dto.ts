@@ -51,8 +51,7 @@ export class SearchCampaignDto {
   siteLogo: string;
 
   @IsNotEmpty()
-  @IsEnum(CampaignSite)
-  campaign: CampaignSite;
+  campaign: string;
 
   @IsString()
   @IsEnum(Platform)
@@ -67,7 +66,7 @@ export class SearchCampaignDto {
 
   @IsNotEmpty()
   @IsString()
-  content: string;
+  content?: string;
 
   @IsNotEmpty()
   @IsString()
@@ -80,27 +79,10 @@ export class SearchCampaignDto {
 
   @IsOptional()
   //@IsEnum(Category)
-  category: string; // 카테고리
+  category?: string; // 카테고리
 
   @IsOptional()
-  @IsDate()
-  applicationStartAt?: Date; // 신청 시작 시간
-
-  @IsOptional()
-  @IsDate()
-  applicationEndAt?: Date; // 모집 종료 기간
-
-  @IsNotEmpty()
-  @IsDate()
-  winnerAnnouncementAt?: Date; // 당첨 발표 일자
-
-  @IsOptional()
-  @IsDate()
-  contentStartAt?: Date; // 콘텐츠 등록 시작 기간
-
-  @IsOptional()
-  @IsDate()
-  contentEndAt?: Date; // 콘텐츠 체험 종료 기간
+  applicationEndAt?: string | Date; // 모집 종료 기간
 
   @IsNotEmpty()
   @IsInt()

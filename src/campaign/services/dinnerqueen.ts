@@ -48,7 +48,7 @@ export class DinnerQueenService {
     // 데이터 추출
     const dinnerqueenDtos: SearchCampaignDto[] = await page.evaluate(
       (baseUrl) => {
-        const dtoArray: any[] = [];
+        const dtoArray: SearchCampaignDto[] = [];
         const elements = document.querySelectorAll('#taste_list > div');
         elements.forEach((el: any) => {
           const titleText =
@@ -104,7 +104,6 @@ export class DinnerQueenService {
             offer: '',
             category,
             applicationEndAt: applicationEndAt.toISOString(),
-            winnerAnnouncementAt: winnerAnnouncementAt.toISOString(),
             capacity,
             applicantCount,
             thumbnail,
