@@ -12,7 +12,13 @@ export class DinnerQueenService {
     const url = `${this.baseUrl}/taste?order=dday&query=${search}`;
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--remote-debugging-port=9222', // 디버깅 포트
+      ],
     });
     const page = await browser.newPage();
 
