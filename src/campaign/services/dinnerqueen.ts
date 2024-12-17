@@ -18,8 +18,7 @@ export class DinnerQueenService {
         '--disable-gpu',
         '--disable-dev-shm-usage',
       ],
-      executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome',
+      executablePath: process.env.GOOGLE_CHROME_BIN,
     });
     const page = await browser.newPage();
 
