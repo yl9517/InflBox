@@ -13,13 +13,15 @@ export class GangnamRestaurantService {
     const url = `${this.baseUrl}/cp/?stx=${search}`;
     // Puppeteer 인스턴스 최적화
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
       ],
+      executablePath:
+        process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome',
     });
     const page = await browser.newPage();
 

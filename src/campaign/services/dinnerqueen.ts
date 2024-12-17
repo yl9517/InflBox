@@ -11,13 +11,15 @@ export class DinnerQueenService {
   async getDinnerQueenData(search: string): Promise<SearchCampaignDto[]> {
     const url = `${this.baseUrl}/taste?order=dday&query=${search}`;
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
       ],
+      executablePath:
+        process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome',
     });
     const page = await browser.newPage();
 
