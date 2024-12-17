@@ -26,7 +26,7 @@ export class GangnamRestaurantService {
         '--disable-software-rasterizer',
         '--single-process',
         '--no-zygote',
-      ],,\
+      ],
     });
 
     try {
