@@ -12,13 +12,13 @@ export class DinnerQueenService {
     const url = `${this.baseUrl}/taste?order=dday&query=${search}`;
     const browser = await puppeteer.launch({
       headless: true,
+      executablePath: process.env.GOOGLE_CHROME_BIN,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
       ],
-      executablePath: process.env.GOOGLE_CHROME_BIN,
     });
     const page = await browser.newPage();
 
