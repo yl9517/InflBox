@@ -17,12 +17,16 @@ export class GangnamRestaurantService {
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: process.env.GOOGLE_CHROME_BIN,
+      protocolTimeout: 120000,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
-      ],
+        '--disable-software-rasterizer',
+        '--single-process',
+        '--no-zygote',
+      ],,\
     });
 
     try {
