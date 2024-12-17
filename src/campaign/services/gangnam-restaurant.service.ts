@@ -20,6 +20,9 @@ export class GangnamRestaurantService {
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
+        '--disable-software-rasterizer',
+        '--no-zygote',
+        '--single-process',
       ],
     });
     const page = await browser.newPage();
@@ -35,7 +38,7 @@ export class GangnamRestaurantService {
     });
 
     // DOM만 로드되면 작업 실행
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
     // 무한 스크롤 처리
     // let previousHeight;

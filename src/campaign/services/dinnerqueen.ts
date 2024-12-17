@@ -18,6 +18,9 @@ export class DinnerQueenService {
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage',
+        '--disable-software-rasterizer',
+        '--no-zygote',
+        '--single-process',
       ],
     });
     const page = await browser.newPage();
@@ -38,7 +41,7 @@ export class DinnerQueenService {
     });
 
     // 페이지 로드
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
     // 무한 스크롤 처리
     // let previousHeight;
