@@ -27,9 +27,13 @@ export class GangnamRestaurantService {
         '--no-zygote',
         '--single-process',
       ],
-    });
+      ignoreHTTPSErrors: true,
+    } as any);
     const page = await browser.newPage();
 
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+    );
     // 네트워크 리소스 차단 (이미지, 스타일시트 등)
     await page.setRequestInterception(true);
     page.on('request', (request) => {
@@ -45,7 +49,7 @@ export class GangnamRestaurantService {
     try {
       await page.goto(url, {
         waitUntil: 'networkidle2', // 네트워크 리소스가 유휴 상태일 때까지 기다림
-        timeout: 90000, // 타임아웃 90초로 확장
+        timeout: 90000,
       });
     } catch (err) {
       console.error('Navigation error:', err);
