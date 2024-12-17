@@ -11,6 +11,9 @@ export class GangnamRestaurantService {
   // 크롤링
   async getGangnamRestaurants(search: string): Promise<SearchCampaignDto[]> {
     const url = `${this.baseUrl}/cp/?stx=${search}`;
+    console.log('Using URL:', url);
+    console.log('Chrome path:', process.env.GOOGLE_CHROME_BIN); // 경로 확인용
+
     // Puppeteer 인스턴스 최적화
     const browser = await puppeteer.launch({
       headless: true,
@@ -38,8 +41,17 @@ export class GangnamRestaurantService {
     });
 
     // DOM만 로드되면 작업 실행
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-
+    //  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    try {
+      await page.goto(url, {
+        waitUntil: 'networkidle2', // 네트워크 리소스가 유휴 상태일 때까지 기다림
+        timeout: 90000, // 타임아웃 90초로 확장
+      });
+    } catch (err) {
+      console.error('Navigation error:', err);
+      await browser.close();
+      throw new Error('Failed to load the page');
+    }
     // 무한 스크롤 처리
     // let previousHeight;
     // let currentHeight = await page.evaluate(() => document.body.scrollHeight);
