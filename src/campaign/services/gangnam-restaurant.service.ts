@@ -17,7 +17,7 @@ export class GangnamRestaurantService {
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: process.env.GOOGLE_CHROME_BIN,
-      protocolTimeout: 120000,
+      protocolTimeout: 180000,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -30,7 +30,9 @@ export class GangnamRestaurantService {
     });
 
     try {
+      console.log('brower', browser);
       const page = await browser.newPage();
+      console.log('page', page);
 
       await page.setUserAgent(
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
@@ -38,7 +40,7 @@ export class GangnamRestaurantService {
       // 네트워크 리소스 차단 (이미지, 스타일시트 등)
       await page.setRequestInterception(true);
       page.on('request', (request) => {
-        if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+        if (['image', 'stylesheet', 'font','media'].includes(request.resourceType())) {
           request.abort();
         } else {
           request.continue();
