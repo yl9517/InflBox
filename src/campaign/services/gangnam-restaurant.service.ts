@@ -37,16 +37,29 @@ export class GangnamRestaurantService {
       await page.setUserAgent(
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
       );
+      console.log('Browser connected:', browser.isConnected());
       // 네트워크 리소스 차단 (이미지, 스타일시트 등)
       await page.setRequestInterception(true);
       page.on('request', (request) => {
-        if (['image', 'stylesheet', 'font','media'].includes(request.resourceType())) {
+        console.log('Request made:', request.url());
+      });
+
+      page.on('response', (response) => {
+        console.log('Response received:', response.url(), response.status());
+      });
+
+      page.on('request', (request) => {
+        if (
+          ['image', 'stylesheet', 'font', 'media'].includes(
+            request.resourceType(),
+          )
+        ) {
           request.abort();
         } else {
           request.continue();
         }
       });
-
+      console.log('Browser connected2:', browser.isConnected());
       // DOM만 로드되면 작업 실행
       //  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
@@ -54,7 +67,7 @@ export class GangnamRestaurantService {
         waitUntil: 'load', // 페이지 전체 로드 완료 시점까지 대기
         timeout: 0,
       });
-
+      console.log('Page loaded');
       // 무한 스크롤 처리
       // let previousHeight;
       // let currentHeight = await page.evaluate(() => document.body.scrollHeight);
