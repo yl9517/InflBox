@@ -53,8 +53,8 @@ export class GangnamRestaurantService {
         try {
           console.log('Navigating to page...');
           await page.goto(url, {
-            waitUntil: 'domcontentloaded',
-            timeout: 60000,
+            waitUntil: 'networkidle2',
+            timeout: 66660000,
           });
           console.log('Page loaded');
         } catch (err) {
