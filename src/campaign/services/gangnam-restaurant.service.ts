@@ -50,14 +50,17 @@ export class GangnamRestaurantService {
             req.continue();
           }
         });
-
-        console.log('Navigating to page...');
-        await page.goto(url, {
-          waitUntil: 'domcontentloaded', // DOM 로드 시점
-          timeout: 60000, // 타임아웃 설정
-        });
-        console.log('Page loaded');
-
+        try {
+          console.log('Navigating to page...');
+          await page.goto(url, {
+            waitUntil: 'domcontentloaded',
+            timeout: 60000,
+          });
+          console.log('Page loaded');
+        } catch (err) {
+          console.error('Failed to navigate:', err.message);
+          throw new Error(`Page navigation failed: ${err.message}`);
+        }
         // 데이터 추출
         const restaurantDtos: SearchCampaignDto[] = await page.evaluate(
           (baseUrl) => {
