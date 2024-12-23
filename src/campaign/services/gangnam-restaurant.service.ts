@@ -10,7 +10,7 @@ export class GangnamRestaurantService {
 
   // 크롤링
   async getGangnamRestaurants(search: string): Promise<SearchCampaignDto[]> {
-    const url = `${this.baseUrl}/cp/?stx=${search}`;
+    const url = 'naver.com'; // `${this.baseUrl}/cp/?stx=${search}`;
     console.log('Using URL:', url);
     console.log('Chrome path:', process.env.GOOGLE_CHROME_BIN); // 경로 확인용
 
